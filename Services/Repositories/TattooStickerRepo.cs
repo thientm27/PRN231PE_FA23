@@ -10,6 +10,12 @@ namespace BusinessObjects.Repositories
         public TattooStickerRepo(RoseTattooShop2023DBContext context) : base(context)
         {
         }
+        public override List<TattooSticker> GetAll()
+        {
+            return _context.TattooStickers.Include(o => o.Type).ToList();
+
+        }
+
         public override TattooSticker? GetById(int id)
         {
             return GetAll().FirstOrDefault(o => o.TattooStickerId == id);
