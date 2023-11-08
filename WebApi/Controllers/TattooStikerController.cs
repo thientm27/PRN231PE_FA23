@@ -75,7 +75,6 @@ namespace WebApi.Controllers
             if (!IsValidDate((DateTime)entity.ImportDate))
             {
                 return BadRequest("ImportDate >=1990 and ImportDate <= current date.");
-
             }
             var result = service.AddNew(entity);
             if (result) return Ok("Add TattooSticker successful!");
@@ -83,11 +82,20 @@ namespace WebApi.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put(TattooSticker student)
+        public IActionResult Put(TattooSticker entity)
         {
-            var result = service.UpdateEntity(student);
-            if (result) return Ok("Update Student successful!");
-            return BadRequest("Update Student failed!");
+            if (!IsValidName(entity.TattooStickerName))
+            {
+                return BadRequest("TattooStickerName includes a-z, A-Z, /, *, $, #, space and digit 0-9. Each word of the TattooStickerName must begin with the capital letter.");
+            }
+            if (!IsValidDate((DateTime)entity.ImportDate))
+            {
+                return BadRequest("ImportDate >=1990 and ImportDate <= current date.");
+            }
+
+            var result = service.UpdateEntity(entity);
+            if (result) return Ok("Update entity successful!");
+            return BadRequest("Update entity failed!");
         }
 
         [HttpDelete("{id}")]
@@ -100,9 +108,22 @@ namespace WebApi.Controllers
 
         private bool IsValidName(string name)
         {
+            // Split the name into words based on spaces
+            string[] words = name.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-            string pattern = "^(?:[A-Z][a-zA-Z0-9*$/# ]*)+$";
-            return Regex.IsMatch(name, pattern);
+            // Define a regular expression pattern for allowed characters
+            string allowedPattern = "^[A-Za-z0-9*$/# ]+$";
+
+            // Check each word to ensure it starts with an uppercase letter and only contains allowed characters
+            foreach (string word in words)
+            {
+                if (word.Length == 0 || !char.IsUpper(word[0]) || !Regex.IsMatch(word, allowedPattern))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
         private bool IsValidDate(DateTime date)
         {

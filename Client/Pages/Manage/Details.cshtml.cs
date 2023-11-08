@@ -6,37 +6,37 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BusinessObjects.Models;
+using Client.Pages.Inheritance;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
 
 namespace Client.Pages.Manage
 {
-    public class DetailsModel : PageModel
+    public class DetailsModel : ClientAbstract
     {
-        private readonly BusinessObjects.Models.RoseTattooShop2023DBContext _context;
-
-        public DetailsModel(BusinessObjects.Models.RoseTattooShop2023DBContext context)
+        public DetailsModel(IHttpClientFactory http, IHttpContextAccessor httpContextAccessor) : base(http, httpContextAccessor)
         {
-            _context = context;
         }
 
-      public TattooSticker TattooSticker { get; set; } = default!; 
+        public TattooSticker TattooSticker { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task OnGetAsync(int? id)
         {
-            if (id == null || _context.TattooStickers == null)
+            string token = _context.HttpContext.Session.GetString("token");
+            // Thêm token vào tiêu đề yêu cầu HTTP
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            string url = $"api/manage/{id}";
+            HttpResponseMessage response = await HttpClient.GetAsync(url);
+            if (response.IsSuccessStatusCode)
             {
-                return NotFound();
+                var content = await response.Content.ReadAsStringAsync();
+                TattooSticker = JsonConvert.DeserializeObject<TattooSticker>(content);
             }
+            else
+            {
+                ViewData["Message"] =   await response.Content.ReadAsStringAsync();
 
-            var tattoosticker = await _context.TattooStickers.FirstOrDefaultAsync(m => m.TattooStickerId == id);
-            if (tattoosticker == null)
-            {
-                return NotFound();
             }
-            else 
-            {
-                TattooSticker = tattoosticker;
-            }
-            return Page();
         }
     }
 }

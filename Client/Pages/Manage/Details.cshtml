@@ -4,7 +4,10 @@
 @{
     ViewData["Title"] = "Details";
 }
-
+@if (ViewData["Message"] != null)
+{
+    <h3 style="color:red">@ViewData["Message"]</h3>
+}
 <h1>Details</h1>
 
 <div>

@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.Repositories;
 using BusinessObjects.Models;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace BusinessObjects.Repositories
@@ -49,7 +50,8 @@ namespace BusinessObjects.Repositories
             var m_update = GetById(entity.TattooStickerId);
             if (m_update != null)
             {
-                Update(entity);
+                _context.Entry(m_update).State = EntityState.Detached; // Detach the existing entity
+                _context.Update(entity);
                 var result = Save();
                 if (result > 0) return true;
             }
