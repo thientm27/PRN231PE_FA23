@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BusinessObjects.Models;
+using Client.Pages.Inheritance;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
 
 namespace Client.Pages.Manage
 {
-    public class DeleteModel : PageModel
+    public class DeleteModel : ClientAbstract
     {
-        private readonly BusinessObjects.Models.RoseTattooShop2023DBContext _context;
-
-        public DeleteModel(BusinessObjects.Models.RoseTattooShop2023DBContext context)
+        public DeleteModel(IHttpClientFactory http, IHttpContextAccessor httpContextAccessor) : base(http, httpContextAccessor)
         {
-            _context = context;
         }
 
         [BindProperty]
@@ -23,40 +18,38 @@ namespace Client.Pages.Manage
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.TattooStickers == null)
-            {
-                return NotFound();
-            }
+            string token = _context.HttpContext.Session.GetString("token");
 
-            var tattoosticker = await _context.TattooStickers.FirstOrDefaultAsync(m => m.TattooStickerId == id);
-
-            if (tattoosticker == null)
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            string url = $"api/manage/{id}";
+            HttpResponseMessage response = await HttpClient.GetAsync(url);
+            if (response.IsSuccessStatusCode)
             {
-                return NotFound();
+                var content = await response.Content.ReadAsStringAsync();
+                TattooSticker = JsonConvert.DeserializeObject<TattooSticker>(content);
             }
-            else 
+            else
             {
-                TattooSticker = tattoosticker;
+                ViewData["Message"] = "Error: " + await response.Content.ReadAsStringAsync();
             }
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null || _context.TattooStickers == null)
+            string token = _context.HttpContext.Session.GetString("token");
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            string url = $"api/manage/{TattooSticker.TattooStickerId}";
+            HttpResponseMessage response = await HttpClient.DeleteAsync(url);
+            if (response.IsSuccessStatusCode)
             {
-                return NotFound();
+                return RedirectToPage("Index");
             }
-            var tattoosticker = await _context.TattooStickers.FindAsync(id);
-
-            if (tattoosticker != null)
+            else
             {
-                TattooSticker = tattoosticker;
-                _context.TattooStickers.Remove(TattooSticker);
-                await _context.SaveChangesAsync();
+                ViewData["Message"] = await response.Content.ReadAsStringAsync();
+                return Page();
             }
-
-            return RedirectToPage("./Index");
         }
     }
 }

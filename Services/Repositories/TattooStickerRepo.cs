@@ -34,12 +34,6 @@ namespace BusinessObjects.Repositories
             return false;
         }
 
-        //public List<TattooSticker?> GetByParameter(int groupId, DateTime minBirthday, DateTime maxBirthday)
-        //{
-        //    var entities = GetAll();
-        //    if (entities.Any()) return entities;
-        //    return null;
-        //}
 
         public List<TattooSticker> GetByParameter(string searchString, DateTime date)
         {
