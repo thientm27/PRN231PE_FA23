@@ -43,6 +43,18 @@ namespace WebApi.Controllers
         //    return BadRequest("Student don't exist in DB");
         //}
 
+        [HttpGet("search")]
+        public IActionResult GetByQuery(string? searchString, DateTime? searchDate)
+        {
+            if(searchString == null || searchDate == null)
+            {
+                searchString = "";
+                searchDate = DateTime.Today;
+            }
+            var result = service.GetByParameter(searchString, (DateTime)searchDate);
+            if (result.Any()) return Ok(result);
+            return BadRequest("Item don't exist in DB");
+        }
         [HttpPost]
         public IActionResult Post(TattooSticker entity)
         {

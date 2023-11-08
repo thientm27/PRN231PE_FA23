@@ -41,19 +41,14 @@ namespace BusinessObjects.Repositories
         //    return null;
         //}
 
-        public List<TattooSticker?> GetByParameter(string? searchString, DateTime? date)
+        public List<TattooSticker> GetByParameter(string searchString, DateTime date)
         {
             var entities = GetAll();
-            if (searchString != null)
-            {
-                entities.Where(o => o.TattooStickerDescription.ToLower().Equals(searchString.ToLower()));
-            }
-            if (date != null)
-            {
-                entities.Where(o => o.ImportDate == date);
-            }
-            if (entities.Any()) return entities;
-            return null;
+            entities = entities.Where(o 
+                => o.TattooStickerDescription.ToLower().Contains(searchString.ToLower())
+                || o.ImportDate == date
+                ).ToList();
+            return entities;
         }
         public bool UpdateEntity(TattooSticker entity)
         {

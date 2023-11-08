@@ -1,0 +1,85 @@
+﻿@page
+@model Client.Pages.Manage.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+@if (ViewData["Message"] != null)
+{
+    <h3 style="color:red">@ViewData["Message"]</h3>
+}
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+@* Search *@
+<div>
+    <form method="post">
+        <div class="form-group">
+            <label asp-for="searchString" class="control-label"> Decription </label>
+            <input asp-for="searchString" class="form-control" />
+            <br/>
+            <label asp-for="importDate" class="control-label"></label>
+            <input type="date" asp-for="importDate" class="form-control"  />
+            <br />
+            <button type="submit">Search</button>
+        </div>
+    </form>
+</div>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TattooSticker[0].TattooStickerName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TattooSticker[0].ImportDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TattooSticker[0].TattooStickerDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TattooSticker[0].Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TattooSticker[0].Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TattooSticker[0].Type)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.TattooSticker) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TattooStickerName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImportDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TattooStickerDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type.TypeId)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.TattooStickerId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.TattooStickerId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.TattooStickerId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

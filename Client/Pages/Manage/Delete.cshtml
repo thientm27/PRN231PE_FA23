@@ -1,0 +1,58 @@
+﻿@page
+@model Client.Pages.Manage.DeleteModel
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>TattooSticker</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TattooSticker.TattooStickerName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TattooSticker.TattooStickerName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TattooSticker.ImportDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TattooSticker.ImportDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TattooSticker.TattooStickerDescription)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TattooSticker.TattooStickerDescription)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TattooSticker.Quantity)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TattooSticker.Quantity)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TattooSticker.Price)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TattooSticker.Price)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TattooSticker.Type)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TattooSticker.Type.TypeId)
+        </dd>
+    </dl>
+    
+    <form method="post">
+        <input type="hidden" asp-for="TattooSticker.TattooStickerId" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-page="./Index">Back to List</a>
+    </form>
+</div>

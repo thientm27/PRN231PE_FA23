@@ -18,9 +18,8 @@ namespace Presentation.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            //Xây dựng URL cho api
             string url = "api/Authen/Login";
-            // Parameter
+
             var queryParameter = new Dictionary<string, string>
             {
                 {"email", username},
@@ -46,7 +45,7 @@ namespace Presentation.Pages
                 if (role.Equals("3"))
                 {
                     _context.HttpContext.Session.SetString("token", content);
-                    return RedirectToPage("Index");
+                    return RedirectToPage("/Manage/Index");
                 }
             }
             ViewData["Message"] = "You do not have permission to do this function, only Manager!";
