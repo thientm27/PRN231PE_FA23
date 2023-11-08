@@ -28,7 +28,7 @@ namespace BusinessLogic.Repositories
             return _context.Set<T>().ToList();
         }
 
-        public virtual T GetById(int id)
+        public virtual T? GetById(int id)
         {
             return _context.Set<T>().Find(id);
         }
@@ -42,5 +42,6 @@ namespace BusinessLogic.Repositories
         {
             _context.Set<T>().Update(entity);
         }
+
     }
 }

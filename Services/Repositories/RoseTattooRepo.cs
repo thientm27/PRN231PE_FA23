@@ -13,5 +13,6 @@ namespace BusinessObjects.Repositories
         public RoseTattooRepo(RoseTattooShop2023DBContext context) : base(context)
         {
         }
+
     }
 }

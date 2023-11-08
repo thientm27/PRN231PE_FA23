@@ -1,0 +1,15 @@
+﻿@page
+@model Presentation.Pages.LoginModel
+@if (ViewData["Message"] != null)
+{
+    <h3 style="color:red">@ViewData["Message"]</h3>
+}
+<div>
+    <form method="post">
+        <label>UserName</label>
+        <input asp-for="@Model.username" />
+        <label>Password</label>
+        <input asp-for="@Model.password" />
+        <button type="submit">Login</button>
+    </form>
+</div>

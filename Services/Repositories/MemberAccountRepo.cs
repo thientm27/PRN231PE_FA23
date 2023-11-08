@@ -12,6 +12,15 @@ namespace BusinessObjects.Repositories
     {
         public MemberAccountRepo(RoseTattooShop2023DBContext context) : base(context)
         {
+
+        }
+        public MemberAccount? Login(string email, string password)
+        {
+            var entity = GetAll().FirstOrDefault(o
+                => o.MemberEmail.ToLower().Equals(email.ToLower())
+                && o.MemberPassword.Equals(password));
+
+            return entity;
         }
     }
 }
