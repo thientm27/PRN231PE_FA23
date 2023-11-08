@@ -25,8 +25,12 @@ namespace Client.Pages.Manage
         [BindProperty]
         public DateTime importDate { get; set; }
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
+            if (!CheckAuthen())
+            {
+                return RedirectToPage("/Login");
+            }
             string token = _context.HttpContext.Session.GetString("token");
             HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             HttpResponseMessage response = await HttpClient.GetAsync("api/manage");
@@ -36,6 +40,7 @@ namespace Client.Pages.Manage
                 var content = await response.Content.ReadAsStringAsync();
                 TattooSticker = JsonConvert.DeserializeObject<List<TattooSticker>>(content);
             }
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -53,8 +58,6 @@ namespace Client.Pages.Manage
             ViewData["Message"] = "TattooSticker don't exits!";
             await OnGetAsync();
             return Page();
-     
-          
         }
         public async Task OnPostResetAsync()
         {

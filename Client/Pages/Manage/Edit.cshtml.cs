@@ -24,9 +24,12 @@ namespace Client.Pages.Manage
         [BindProperty]
         public TattooSticker TattooSticker { get; set; } = default!;
 
-        public async Task OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
-
+            if (!CheckAuthen())
+            {
+                return RedirectToPage("/Login");
+            }
             // LOAD ADDITION
             string token = _context.HttpContext.Session.GetString("token");
             HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -49,7 +52,7 @@ namespace Client.Pages.Manage
                 TattooSticker = JsonConvert.DeserializeObject<TattooSticker>(content);
             }
 
-
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()

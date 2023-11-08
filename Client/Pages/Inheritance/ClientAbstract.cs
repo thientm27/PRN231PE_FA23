@@ -15,5 +15,12 @@ namespace Client.Pages.Inheritance
             HttpClient = _http.CreateClient();
             HttpClient.BaseAddress = new Uri("https://localhost:7209/");
         }
+
+        public bool CheckAuthen()
+        {
+            var str = _context.HttpContext.Session.GetString("role");
+            return str != null
+                 && str.Equals("3");
+        }
     }
 }

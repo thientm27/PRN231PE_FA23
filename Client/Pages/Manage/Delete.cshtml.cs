@@ -18,6 +18,10 @@ namespace Client.Pages.Manage
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
+            if (!CheckAuthen())
+            {
+                return RedirectToPage("/Login");
+            }
             string token = _context.HttpContext.Session.GetString("token");
 
             HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);

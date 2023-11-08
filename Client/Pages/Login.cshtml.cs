@@ -42,6 +42,7 @@ namespace Presentation.Pages
 
                 // Truy cập các trường trong payload
                 string role = payload.RootElement.GetProperty("role").GetString();
+                _context.HttpContext.Session.SetString("role", role);
                 if (role.Equals("3"))
                 {
                     _context.HttpContext.Session.SetString("token", content);
@@ -56,5 +57,11 @@ namespace Presentation.Pages
             ViewData["Message"] = "Wrong email or password!";
             return Page();
         }
+        public IActionResult OnPostLogOut()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToPage("/Login");
+        }
     }
+
 }

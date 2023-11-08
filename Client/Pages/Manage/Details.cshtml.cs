@@ -20,8 +20,12 @@ namespace Client.Pages.Manage
 
         public TattooSticker TattooSticker { get; set; } = default!;
 
-        public async Task OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
+            if (!CheckAuthen())
+            {
+                return RedirectToPage("/Login");
+            }
             string token = _context.HttpContext.Session.GetString("token");
             // Thêm token vào tiêu đề yêu cầu HTTP
             HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -35,8 +39,8 @@ namespace Client.Pages.Manage
             else
             {
                 ViewData["Message"] =   await response.Content.ReadAsStringAsync();
-
             }
+            return Page();
         }
     }
 }

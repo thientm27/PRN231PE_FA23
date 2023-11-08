@@ -10,6 +10,7 @@ using Client.Pages.Inheritance;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Data;
 
 namespace Client.Pages.Manage
 {
@@ -20,8 +21,12 @@ namespace Client.Pages.Manage
         }
 
 
-        public async Task OnGet()
+        public async Task<IActionResult> OnGet()
         {
+            if (!CheckAuthen())
+            {
+                return RedirectToPage("/Login");
+            }
             string token = _context.HttpContext.Session.GetString("token");
             HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             HttpResponseMessage response = await HttpClient.GetAsync("api/manage/type");
@@ -32,6 +37,7 @@ namespace Client.Pages.Manage
                 var temp = JsonConvert.DeserializeObject<List<RoseTattooType>>(content);
                 ViewData["TypeId"] = new SelectList(temp, "TypeId", "RoseTattooName");
             }
+            return Page();
         }
 
         [BindProperty]

@@ -132,5 +132,13 @@ namespace WebApi.Controllers
 
             return date >= minDate && date <= currentDate;
         }
+        private bool IsValidDate(DateTime date1, DateTime date2)
+        {
+            if(date1 == null || date2 == null) return false;
+            if(date1 <= new DateTime(1990, 1, 1)) return false;
+            if(date2 >= new DateTime(1990, 1, 1)) return false;
+            if(date1 > date2) return false;
+            return true;
+        }
     }
 }
