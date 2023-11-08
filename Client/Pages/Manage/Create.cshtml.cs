@@ -6,40 +6,58 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using BusinessObjects.Models;
+using Client.Pages.Inheritance;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
+using System.Text;
 
 namespace Client.Pages.Manage
 {
-    public class CreateModel : PageModel
+    public class CreateModel : ClientAbstract
     {
-        private readonly BusinessObjects.Models.RoseTattooShop2023DBContext _context;
-
-        public CreateModel(BusinessObjects.Models.RoseTattooShop2023DBContext context)
+        public CreateModel(IHttpClientFactory http, IHttpContextAccessor httpContextAccessor) : base(http, httpContextAccessor)
         {
-            _context = context;
         }
 
-        public IActionResult OnGet()
+
+        public async Task OnGet()
         {
-        ViewData["TypeId"] = new SelectList(_context.RoseTattooTypes, "TypeId", "TypeId");
-            return Page();
+            string token = _context.HttpContext.Session.GetString("token");
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            HttpResponseMessage response = await HttpClient.GetAsync("api/manage/type");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var temp = JsonConvert.DeserializeObject<List<RoseTattooType>>(content);
+                ViewData["TypeId"] = new SelectList(temp, "TypeId", "RoseTattooName");
+            }
         }
 
         [BindProperty]
         public TattooSticker TattooSticker { get; set; } = default!;
-        
+
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.TattooStickers == null || TattooSticker == null)
+            string token = _context.HttpContext.Session.GetString("token");
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            string url = "api/manage";
+            var jsonContent = JsonConvert.SerializeObject(TattooSticker);
+            var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            var response = await HttpClient.PostAsync(url, httpContent);
+
+            if (response.IsSuccessStatusCode)
             {
+                return RedirectToPage("Index");
+            }
+            else 
+            {
+                ViewData["Message"] = "Create Fail: " + await response.Content.ReadAsStringAsync();
+                await OnGet();
                 return Page();
             }
-
-            _context.TattooStickers.Add(TattooSticker);
-            await _context.SaveChangesAsync();
-
-            return RedirectToPage("./Index");
         }
     }
 }

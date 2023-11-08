@@ -4,7 +4,10 @@
 @{
     ViewData["Title"] = "Create";
 }
-
+@if (ViewData["Message"] != null)
+{
+    <h3 style="color:red">@ViewData["Message"]</h3>
+}
 <h1>Create</h1>
 
 <h4>TattooSticker</h4>
@@ -14,33 +17,31 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="TattooSticker.TattooStickerId" class="control-label"></label>
-                <input asp-for="TattooSticker.TattooStickerId" class="form-control" />
-                <span asp-validation-for="TattooSticker.TattooStickerId" class="text-danger"></span>
+                <input asp-for="TattooSticker.TattooStickerId" value="0" hidden/>
             </div>
             <div class="form-group">
                 <label asp-for="TattooSticker.TattooStickerName" class="control-label"></label>
-                <input asp-for="TattooSticker.TattooStickerName" class="form-control" />
+                <input asp-for="TattooSticker.TattooStickerName" class="form-control" required/>
                 <span asp-validation-for="TattooSticker.TattooStickerName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="TattooSticker.ImportDate" class="control-label"></label>
-                <input asp-for="TattooSticker.ImportDate" class="form-control" />
+                <input asp-for="TattooSticker.ImportDate" class="form-control" required />
                 <span asp-validation-for="TattooSticker.ImportDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="TattooSticker.TattooStickerDescription" class="control-label"></label>
-                <input asp-for="TattooSticker.TattooStickerDescription" class="form-control" />
+                <input asp-for="TattooSticker.TattooStickerDescription" class="form-control" required />
                 <span asp-validation-for="TattooSticker.TattooStickerDescription" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="TattooSticker.Quantity" class="control-label"></label>
-                <input asp-for="TattooSticker.Quantity" class="form-control" />
+                <input asp-for="TattooSticker.Quantity" class="form-control" required />
                 <span asp-validation-for="TattooSticker.Quantity" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="TattooSticker.Price" class="control-label"></label>
-                <input asp-for="TattooSticker.Price" class="form-control" />
+                <input asp-for="TattooSticker.Price" class="form-control" required />
                 <span asp-validation-for="TattooSticker.Price" class="text-danger"></span>
             </div>
             <div class="form-group">

@@ -47,8 +47,13 @@ namespace Presentation.Pages
                     _context.HttpContext.Session.SetString("token", content);
                     return RedirectToPage("/Manage/Index");
                 }
+                else
+                {
+                    ViewData["Message"] = "You do not have permission to do this function, only Manager!";
+                    return Page();
+                }
             }
-            ViewData["Message"] = "You do not have permission to do this function, only Manager!";
+            ViewData["Message"] = "Wrong email or password!";
             return Page();
         }
     }

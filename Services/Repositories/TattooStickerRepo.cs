@@ -9,7 +9,6 @@ namespace BusinessObjects.Repositories
         public TattooStickerRepo(RoseTattooShop2023DBContext context) : base(context)
         {
         }
-
         public override TattooSticker? GetById(int id)
         {
             return GetAll().FirstOrDefault(o => o.TattooStickerId == id);
@@ -17,6 +16,7 @@ namespace BusinessObjects.Repositories
 
         public bool AddNew(TattooSticker item)
         {
+            item.TattooStickerId =  GetAll().Max(o => o.TattooStickerId) + 1;
             Add(item);
             var result = Save();
             if (result > 0) return true;

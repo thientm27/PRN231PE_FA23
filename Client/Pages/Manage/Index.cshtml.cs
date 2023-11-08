@@ -13,7 +13,7 @@ using System.Text.RegularExpressions;
 
 namespace Client.Pages.Manage
 {
-    public class IndexModel :   ClientAbstract
+    public class IndexModel : ClientAbstract
     {
         public IndexModel(IHttpClientFactory http, IHttpContextAccessor httpContextAccessor) : base(http, httpContextAccessor)
         {
@@ -49,10 +49,6 @@ namespace Client.Pages.Manage
                 var content = await response.Content.ReadAsStringAsync();
                 TattooSticker = JsonConvert.DeserializeObject<List<TattooSticker>>(content);
                 return Page();
-            }
-            else
-            {
-            
             }
             ViewData["Message"] = "TattooSticker don't exits!";
             await OnGetAsync();

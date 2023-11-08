@@ -4,6 +4,7 @@ using BusinessObjects.Models;
 using ControllerAPI.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.RegularExpressions;
 
 namespace WebApi.Controllers
 {
@@ -13,10 +14,12 @@ namespace WebApi.Controllers
     public class TattooStikerController : ControllerBase
     {
         ITattooStickerRepo service;
+        IRoseTattooRepo service2;
 
-        public TattooStikerController(ITattooStickerRepo serviceParam)
+        public TattooStikerController(ITattooStickerRepo serviceParam, IRoseTattooRepo service2Param)
         {
             service = serviceParam;
+            service2 = service2Param;
         }
 
         [HttpGet]
@@ -27,6 +30,13 @@ namespace WebApi.Controllers
             return NoContent();
         }
 
+        [HttpGet("type")]
+        public IActionResult GetTpye()
+        {
+            var result = service2.GetAll();
+            if (result.Any()) return Ok(result);
+            return NoContent();
+        }
         [HttpGet("{id}")]
         public IActionResult GetByid(int id)
         {
@@ -58,6 +68,15 @@ namespace WebApi.Controllers
         [HttpPost]
         public IActionResult Post(TattooSticker entity)
         {
+            if (!IsValidName(entity.TattooStickerName))
+            {
+                return BadRequest("TattooStickerName includes a-z, A-Z, /, *, $, #, space and digit 0-9. Each word of the TattooStickerName must begin with the capital letter.");
+            }
+            if (!IsValidDate((DateTime)entity.ImportDate))
+            {
+                return BadRequest("ImportDate >=1990 and ImportDate <= current date.");
+
+            }
             var result = service.AddNew(entity);
             if (result) return Ok("Add TattooSticker successful!");
             return BadRequest("Add TattooSticker failed!");
@@ -77,6 +96,20 @@ namespace WebApi.Controllers
             var result = service.DeleteById(id);
             if (result) return Ok("Delete TattooSticker successful!");
             return BadRequest("Delete TattooSticker failed!");
+        }
+
+        private bool IsValidName(string name)
+        {
+
+            string pattern = "^(?:[A-Z][a-zA-Z0-9*$/# ]*)+$";
+            return Regex.IsMatch(name, pattern);
+        }
+        private bool IsValidDate(DateTime date)
+        {
+            DateTime minDate = new DateTime(1990, 1, 1);
+            DateTime currentDate = DateTime.Now;
+
+            return date >= minDate && date <= currentDate;
         }
     }
 }

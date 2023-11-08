@@ -7,9 +7,9 @@
 <div>
     <form method="post">
         <label>UserName</label>
-        <input asp-for="@Model.username" />
+        <input asp-for="@Model.username" required />
         <label>Password</label>
-        <input asp-for="@Model.password" />
+        <input asp-for="@Model.password"  required/>
         <button type="submit">Login</button>
     </form>
 </div>
