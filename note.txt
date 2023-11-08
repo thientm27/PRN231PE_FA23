@@ -1,0 +1,4 @@
+
+dotnet tool install --global dotnet-ef --version 6.*
+
+dotnet ef dbcontext scaffold "server =(local); database = RoseTattooShop2023DB;uid=sa;pwd=12345;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer --output-dir Models
